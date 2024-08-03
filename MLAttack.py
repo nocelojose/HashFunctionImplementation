@@ -1,1 +1,2 @@
-"print('Hash Cracker')" 
+"print('Hash Cracked')"
+
