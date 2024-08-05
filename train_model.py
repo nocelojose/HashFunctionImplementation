@@ -101,10 +101,11 @@ def predict_input(output_vector, model, X):
         predictions = model(X)
         closest_index = torch.argmin(torch.norm(predictions - output_vector, dim=1))
         predicted_sequence = X[closest_index]
-        return ''.join(map(str, predicted_sequence.numpy()))
+        return ''.join(map(str, predicted_sequence.numpy())), closest_index
 
 # Randomly select an output vector from the test dataset
-random_index = np.random.randint(0, len(test_dataset))
+test_dataset_indices = list(range(len(test_dataset)))
+random_index = np.random.choice(test_dataset_indices)
 random_output_vector = test_dataset[random_index][1]
 random_output_tensor = torch.tensor(random_output_vector.clone().detach(), dtype=torch.float32)
 
@@ -114,8 +115,13 @@ print(random_output_vector)
 print("Index of the randomly selected output matrix:", random_index)
 
 # Predict the input sequence based on the randomly selected output matrix after training
-predicted_input = predict_input(random_output_tensor, model, X)
+predicted_input, closest_index = predict_input(random_output_tensor, model, X)
 
 # Print the prediction
 print("Predicted input sequence:")
 print(predicted_input)
+
+# Print the actual input sequence corresponding to the randomly selected output matrix
+actual_input_sequence = ''.join(map(str, test_dataset[random_index][0].numpy()))
+print("Actual input sequence for the randomly selected output matrix:")
+print(actual_input_sequence)
